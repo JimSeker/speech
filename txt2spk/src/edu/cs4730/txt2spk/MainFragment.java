@@ -14,7 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple example of getting text input (via a EditText)
+ * and using the text to spech engine to say the words.
  * 
  */
 public class MainFragment extends Fragment implements OnInitListener {
