@@ -2,6 +2,7 @@ package edu.cs4730.spk2txtDemo;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -79,7 +80,7 @@ public class MainFragment extends Fragment {
      */
     @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
+        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
         	
      	
           // Fill the list view with the strings the recognizer thought it could have heard, there should be 5, based on the call
@@ -101,7 +102,7 @@ public class MainFragment extends Fragment {
 	 * simple method to add the log TextView.
 	 */
 	public void logthis (String newinfo) {
-		if (newinfo != "") {
+		if (newinfo.compareTo("") != 0) {
 			log.setText(log.getText() + "\n" + newinfo);
 		}
 	}

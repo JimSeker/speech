@@ -3,6 +3,7 @@ package edu.cs4730.spk2txt;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -36,7 +37,7 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
 
 	
     private static final String TAG = "VoiceRecognition";
-
+    private final String myUtteranceId = "spk2txt";
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
 
     private ListView mList;
@@ -133,16 +134,28 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
      */
     @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
-        	
-        	mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null);
-        	
+        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                   //not sure what an utteranceId is supposed to be... we maybe able to setup a
+                   //listener for "utterences" and check to see if they completed or something.
+                mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null, myUtteranceId);
+            } else {  //below lollipop and use this method instead.
+                mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null);
+            }
           // Fill the list view with the strings the recognizer thought it could have heard
           ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
           //Say it back, JW.
           if (! matches.isEmpty())
-            mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null);
+              if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                  //not sure what an utteranceId is supposed to be... we maybe able to setup a
+                  //listener for "utterences" and check to see if they completed or something.
+                  mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
+              } else {  //below lollipop and use this method instead.
+                  mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null);
+              }
+
           
           //list them to the screen. 
            mList.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, matches));
@@ -228,7 +241,7 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
         }
 
         private void showToast(String text) {
-            Toast.makeText(getActivity(), text, 1000).show();
+            Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -237,5 +250,11 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
 		// TODO Auto-generated method stub
 		
 	}
-	
+    @Override
+    public void onDestroy()
+    {
+        //make sure and shutdown the text to speech engine.
+        super.onDestroy();
+        mTts.shutdown();
+    }
 }

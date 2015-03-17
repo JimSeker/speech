@@ -3,12 +3,14 @@
     package="edu.cs4730.txt2spk">
 
     <application
+        android:allowBackup="true"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" android:allowBackup="true">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

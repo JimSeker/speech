@@ -1,6 +1,7 @@
 package edu.cs4730.txt2spk;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -15,7 +16,7 @@ import android.widget.EditText;
 
 /**
  * A simple example of getting text input (via a EditText)
- * and using the text to spech engine to say the words.
+ * and using the text to speech engine to say the words.
  * 
  */
 public class MainFragment extends Fragment implements OnInitListener {
@@ -24,7 +25,7 @@ public class MainFragment extends Fragment implements OnInitListener {
 	  private static final int REQ_TTS_STATUS_CHECK = 0;
 	  private static final String TAG = "TTS Demo";
 	  private TextToSpeech mTts;
-
+      private  String myUtteranceId = "txt2spk";
 	
 	
 	public MainFragment() {
@@ -44,7 +45,14 @@ public class MainFragment extends Fragment implements OnInitListener {
             public void onClick(View view) {
             	//Speech is simple.  send the words to speech aloud via the 
             	//the text to speech end and add it to the end queue. (maybe others already in line.)
-                mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_ADD, null);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    //not sure what an utteranceId is supposed to be... we maybe able to setup a
+                    //listener for "utterances" and check to see if they completed or something.
+                    mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
+                } else {  //below lollipop and use this method instead.
+                    mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_ADD, null);
+                }
+
             }});
 
         // Check to be sure that TTS exists and is okay to use
