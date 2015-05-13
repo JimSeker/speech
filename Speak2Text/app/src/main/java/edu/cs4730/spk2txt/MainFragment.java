@@ -37,7 +37,7 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
 
 	
     private static final String TAG = "VoiceRecognition";
-    private final String myUtteranceId = "spk2txt";
+    private static final String myUtteranceId = "spk2txt";
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
 
     private ListView mList;
