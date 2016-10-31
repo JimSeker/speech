@@ -13,6 +13,13 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+/*
+ * To test.  Say "Ok Google, Create Note"
+ *       May need to tell it VoiceActivionActivity  (see the screen)
+ *    She will say, "What's the Note?"
+ *      Then something like Get groceries.  You can then open the app to see if it saved.
+ *
+ */
 
 public class VoiceActionActivity extends AppCompatActivity {
     String title, text;
