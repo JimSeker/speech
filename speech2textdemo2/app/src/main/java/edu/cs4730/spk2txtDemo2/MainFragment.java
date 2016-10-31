@@ -2,11 +2,14 @@ package edu.cs4730.spk2txtDemo2;
 
 import java.util.ArrayList;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,9 +26,9 @@ import android.widget.TextView;
  *   
  */
 public class MainFragment extends Fragment implements OnClickListener {
-    private TextView log;
+    private TextView logger;
     private SpeechRecognizer sr;
-    private static final String TAG = "spk2txtD2";
+    private static final String TAG = "MainFragment";
 
     public MainFragment() {
         // Required empty public constructor
@@ -37,7 +40,7 @@ public class MainFragment extends Fragment implements OnClickListener {
         // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.fragment_main, container, false);
         Button speakButton = (Button) myView.findViewById(R.id.button1);
-        log = (TextView) myView.findViewById(R.id.log);
+        logger = (TextView) myView.findViewById(R.id.log);
         speakButton.setOnClickListener(this);
         //get the SpeechRecognizer and set a listener for it.
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity());
@@ -49,6 +52,7 @@ public class MainFragment extends Fragment implements OnClickListener {
     public void onDestroy() {
         sr.destroy();
         sr = null;
+        super.onDestroy();
     }
 
     /*
@@ -105,6 +109,18 @@ public class MainFragment extends Fragment implements OnClickListener {
 
     public void onClick(View v) {
         if (v.getId() == R.id.button1) {
+            RecordSpeak();
+        }
+    }
+
+
+    public void RecordSpeak() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            //I'm on not explaining why, just asking for permission.
+            Log.v(TAG, "asking for permissions");
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECORD_AUDIO},
+                    MainActivity.REQUEST_PERM_ACCESS);
+        } else {
             //get the recognize intent
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             //Specify the calling package to identify your application
@@ -124,7 +140,7 @@ public class MainFragment extends Fragment implements OnClickListener {
      */
     public void logthis(String newinfo) {
         if (newinfo != "") {
-            log.setText(log.getText() + "\n" + newinfo);
+            logger.append("\n" + newinfo);
         }
     }
 }
