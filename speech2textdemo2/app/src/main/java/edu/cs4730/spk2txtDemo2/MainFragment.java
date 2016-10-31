@@ -22,100 +22,109 @@ import android.widget.TextView;
  *   This works for testing, but all the Log.i should likely be removed for real applications.
  *   
  */
-public class MainFragment extends Fragment implements OnClickListener{
-	private TextView log;
-	private SpeechRecognizer sr;
-	private static final String TAG = "spk2txtD2";
-	
-	public MainFragment() {
-		// Required empty public constructor
-	}
+public class MainFragment extends Fragment implements OnClickListener {
+    private TextView log;
+    private SpeechRecognizer sr;
+    private static final String TAG = "spk2txtD2";
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.fragment_main, container, false);
-		Button speakButton = (Button) myView.findViewById(R.id.button1);    
-		log = (TextView) myView.findViewById(R.id.log);     
-		speakButton.setOnClickListener(this);
-		//get the SpeechRecognizer and set a listener for it.
-		sr = SpeechRecognizer.createSpeechRecognizer(getActivity());       
-		sr.setRecognitionListener(new listener());   
-		return myView;
-	}
+    public MainFragment() {
+        // Required empty public constructor
+    }
 
-	@Override
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View myView = inflater.inflate(R.layout.fragment_main, container, false);
+        Button speakButton = (Button) myView.findViewById(R.id.button1);
+        log = (TextView) myView.findViewById(R.id.log);
+        speakButton.setOnClickListener(this);
+        //get the SpeechRecognizer and set a listener for it.
+        sr = SpeechRecognizer.createSpeechRecognizer(getActivity());
+        sr.setRecognitionListener(new listener());
+        return myView;
+    }
+
+    @Override
     public void onDestroy() {
-		sr.destroy();
-		sr = null;
-	}
-	/*
-	 * The Recognitionlistener for the SpeechRecognizer.
-	 */
-	class listener implements RecognitionListener	{
-		public void onReadyForSpeech(Bundle params)	{
-			Log.d(TAG, "onReadyForSpeech");
-		}
-		public void onBeginningOfSpeech(){
-			Log.d(TAG, "onBeginningOfSpeech");
-		}
-		public void onRmsChanged(float rmsdB){
-			Log.d(TAG, "onRmsChanged");
-		}
-		public void onBufferReceived(byte[] buffer)	{
-			Log.d(TAG, "onBufferReceived");
-		}
-		public void onEndOfSpeech()	{
-			Log.d(TAG, "onEndofSpeech");
-		}
-		public void onError(int error)	{
-			Log.d(TAG,  "error " +  error);
-			logthis("error " + error);
-		}
-		public void onResults(Bundle results) {
-			
-			Log.d(TAG, "onResults " + results);
-			// Fill the list view with the strings the recognizer thought it could have heard, there should be 5, based on the call
-			ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-	          //display results.
-			logthis("results: "+String.valueOf(matches.size())); 
-			for (int i = 0; i < matches.size(); i++) {
-				Log.d(TAG, "result " + matches.get(i));
-				logthis("result " +i+":"+ matches.get(i));
-			}
+        sr.destroy();
+        sr = null;
+    }
 
-		}
-		public void onPartialResults(Bundle partialResults)
-		{
-			Log.d(TAG, "onPartialResults");
-		}
-		public void onEvent(int eventType, Bundle params)
-		{
-			Log.d(TAG, "onEvent " + eventType);
-		}
-	}
-	public void onClick(View v) {
-		if (v.getId() == R.id.button1) {
-			//get the recognize intent
-			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-			//Specify the calling package to identify your application
-			intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,getClass().getPackage().getName());
-			//Given an hint to the recognizer about what the user is going to say
-			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-			//specify the max number of results
-			intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
-			//User of SpeechRecognizer to "send" the intent.
-			sr.startListening(intent);
-			Log.i(TAG,"Intent sent");
-		}
-	}
-	/*
-	 * simple method to add the log TextView.
-	 */
-	public void logthis (String newinfo) {
-		if (newinfo != "") {
-			log.setText(log.getText() + "\n" + newinfo);
-		}
-	}
+    /*
+     * The Recognitionlistener for the SpeechRecognizer.
+     */
+    class listener implements RecognitionListener {
+        public void onReadyForSpeech(Bundle params) {
+            Log.d(TAG, "onReadyForSpeech");
+        }
+
+        public void onBeginningOfSpeech() {
+            Log.d(TAG, "onBeginningOfSpeech");
+        }
+
+        public void onRmsChanged(float rmsdB) {
+            Log.d(TAG, "onRmsChanged");
+        }
+
+        public void onBufferReceived(byte[] buffer) {
+            Log.d(TAG, "onBufferReceived");
+        }
+
+        public void onEndOfSpeech() {
+            Log.d(TAG, "onEndofSpeech");
+        }
+
+        public void onError(int error) {
+            Log.d(TAG, "error " + error);
+            logthis("error " + error);
+        }
+
+        public void onResults(Bundle results) {
+
+            Log.d(TAG, "onResults " + results);
+            // Fill the list view with the strings the recognizer thought it could have heard, there should be 5, based on the call
+            ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            //display results.
+            logthis("results: " + String.valueOf(matches.size()));
+            for (int i = 0; i < matches.size(); i++) {
+                Log.d(TAG, "result " + matches.get(i));
+                logthis("result " + i + ":" + matches.get(i));
+            }
+
+        }
+
+        public void onPartialResults(Bundle partialResults) {
+            Log.d(TAG, "onPartialResults");
+        }
+
+        public void onEvent(int eventType, Bundle params) {
+            Log.d(TAG, "onEvent " + eventType);
+        }
+    }
+
+    public void onClick(View v) {
+        if (v.getId() == R.id.button1) {
+            //get the recognize intent
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            //Specify the calling package to identify your application
+            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
+            //Given an hint to the recognizer about what the user is going to say
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            //specify the max number of results
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+            //User of SpeechRecognizer to "send" the intent.
+            sr.startListening(intent);
+            Log.i(TAG, "Intent sent");
+        }
+    }
+
+    /*
+     * simple method to add the log TextView.
+     */
+    public void logthis(String newinfo) {
+        if (newinfo != "") {
+            log.setText(log.getText() + "\n" + newinfo);
+        }
+    }
 }

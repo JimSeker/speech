@@ -5,7 +5,7 @@ eclipse/ has the examples in eclipse project format, no longer updated.  Otherwi
 
 <b>Speak2Text</b>, <b>speach2Textdemo2</b>, and <b>speach2textDemo</b> show the varying ways to do speech to text
 
-<b>txt2spk</b> is a simple example to do text to speach.
+<b>txt2spk</b> is a simple example to do text to speech.
 
 <b>VoiceActionsDemo</b>  Show how to add voice Actions to your app.  This example use the create_note intent.
 
