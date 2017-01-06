@@ -14,24 +14,10 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Saved note is:" />
+        android:text="There is nothing on this screen.   Close it and then say\n
+        ok google, Take a selfie\n
+        OR \n
+        ok google, Take a picture" />
 
-    <TextView
-        android:id="@+id/note_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    <TextView
-        android:id="@+id/note_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="subject"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    <TextView
-        android:id="@+id/note_cat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="cat"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </LinearLayout>
