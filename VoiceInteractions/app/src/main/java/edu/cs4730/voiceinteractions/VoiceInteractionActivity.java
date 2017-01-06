@@ -134,13 +134,13 @@ public class VoiceInteractionActivity extends AppCompatActivity {
 
         //Doing this the Hard way likely.
         VoiceInteractor.PickOptionRequest.Option[] mOptions = new VoiceInteractor.PickOptionRequest.Option[]{
-                new VoiceInteractor.PickOptionRequest.Option(values[0], 0),
-                new VoiceInteractor.PickOptionRequest.Option(values[1], 1).addSynonym("default"),
-                new VoiceInteractor.PickOptionRequest.Option(values[2], 2)
+                new VoiceInteractor.PickOptionRequest.Option(values[0], 0).addSynonym("Forward").addSynonym("selfie"),
+                new VoiceInteractor.PickOptionRequest.Option(values[1], 1).addSynonym("default").addSynonym("Rear").addSynonym("normal"),
+                new VoiceInteractor.PickOptionRequest.Option(values[2], 2).addSynonym("whatever")
         };
 
         //instead of extending the class, just use it here.
-        VoiceInteractor.Prompt prompt = new VoiceInteractor.Prompt("Pick which camera");
+        VoiceInteractor.Prompt prompt = new VoiceInteractor.Prompt("Which camera would you like to use?");
         getVoiceInteractor().submitRequest(new VoiceInteractor.PickOptionRequest(prompt, mOptions, null) {
             @Override
             public void onPickOptionResult(boolean finished, Option[] selections, Bundle result) {
