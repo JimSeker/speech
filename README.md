@@ -9,8 +9,7 @@ eclipse/ has the examples in eclipse project format, no longer updated.  Otherwi
 
 <b>VoiceActionsDemo</b>  Show how to add voice Actions to your app.  This example use the create_note intent.
 
-<b>VoiceInteractions</b> is an attempt at VoiceInteractions which only sort of work.  run it and say Take a selfie 
-and it will show the pickoptions.  The search music intent doesn't work as documented (nor most of the intents allow voice interactions) on a Nexus 5X with marshmallow 6.0.1   As note, the app_name is tuneIn to test "Play music on TuneIn" which doesn't really work.
+<b>VoiceInteractions</b> is an attempt at VoiceInteractions.  Most of the intents don't support voice, but the camera intent does.  So say Take a selfie  OR take a picture.  Take a selfie conforms use of the front camera, while take a picture will ask which camera to use.  A Note, no picture is actually taken by the app.
 
 
 These are example code for University of Wyoming, Cosc 4730 Mobile Programming course.
