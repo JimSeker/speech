@@ -19,6 +19,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
  *    She will say, "What's the Note?"
  *      Then something like Get groceries.  You can then open the app to see if it saved.
  *
+ *   this is google Voice Actions https://developers.google.com/voice-actions/system/#system_actions_reference
+ *   not to be confused with Voice Interactions or "Actions on Google"
+ *
+ *   https://developers.google.com/android/reference/com/google/android/gms/appindexing/package-summary
+ *     for the Thing and Thing.builder used at the end.
+ *
  */
 
 public class VoiceActionActivity extends AppCompatActivity {

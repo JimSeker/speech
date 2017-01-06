@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 /*
  * Nothing really to see here.  It just loads the data if there is any already created by
- * the voiceActionACtivity.
+ * the voiceActionActivity.
  */
 public class MainActivity extends AppCompatActivity {
 
