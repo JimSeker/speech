@@ -2,6 +2,7 @@ package edu.cs4730.spk2txtDemo2;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 //Nothing to see here, look at MainFragment.
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 	//handle the response.
 	@Override
 	public void onRequestPermissionsResult(int requestCode,
-										   String permissions[], int[] grantResults) {
+										   @NonNull String permissions[], @NonNull int[] grantResults) {
 		switch (requestCode) {
 			case REQUEST_PERM_ACCESS: {
 				// If request is cancelled, the result arrays are empty.

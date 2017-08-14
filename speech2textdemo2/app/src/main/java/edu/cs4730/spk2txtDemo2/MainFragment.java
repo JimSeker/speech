@@ -139,7 +139,7 @@ public class MainFragment extends Fragment implements OnClickListener {
      * simple method to add the log TextView.
      */
     public void logthis(String newinfo) {
-        if (newinfo != "") {
+        if (newinfo.compareTo("") != 0) {
             logger.append("\n" + newinfo);
         }
     }
