@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.0"
 
     defaultConfig {
         applicationId "edu.cs4730.voiceinteractions"
         minSdkVersion 23
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
     }
@@ -21,9 +21,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:27.0.0'
     //compile 'com.google.android.gms:play-services-appindexing:9.8.0'  //support 2.3.x and below
-    compile 'com.google.firebase:firebase-appindexing:10.0.1'  //above 2.3.x is supported.
+    compile 'com.google.firebase:firebase-appindexing:11.4.2'  //above 2.3.x is supported.
 }
 
 //for the current version see https://developers.google.com/android/guides/setup

@@ -14,7 +14,7 @@ import android.widget.ListView;
  *   many of the intents don't support voice (even though you can take it anyway, like all the music intents left in this example)
  *
  *   this example show the command "Take a selfie" or  "take a picture."
- *   speak one of the two commands.  selfie impies the front camera, so it will only confirm you action
+ *   speak one of the two commands.  selfie implies the front camera, so it will only confirm your action
  *   while take a picture will ask front or back camera.
  *
  *   btw, te taxi example they show on the main page, only works from android wear....
