@@ -13,11 +13,16 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+
+
 /*
  * To test.  Say "Ok Google, Create Note"
  *       May need to tell it VoiceActivionActivity  (see the screen)
  *    She will say, "What's the Note?"
  *      Then something like Get groceries.  You can then open the app to see if it saved.
+ *
+ *   https://developers.google.com/voice-actions/system/  shows but it badly out of date a this point.
+ *   it is still showing decpriated apis.
  *
  *   this is google Voice Actions https://developers.google.com/voice-actions/system/#system_actions_reference
  *   not to be confused with Voice Interactions or "Actions on Google"
@@ -69,8 +74,9 @@ public class VoiceActionActivity extends AppCompatActivity {
                         value.toString(), value.getClass().getName()));
             }
 
-            //tell google we have completed the action.
+            //tell google we have completed the action.  older not firebase methods
             mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
 
             Thing note = new Thing.Builder()
                     .setName(title)
