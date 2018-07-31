@@ -22,7 +22,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    //not needed, but removes a issue with appcompat versions.
+    implementation 'com.android.support:support-v4:27.1.1'
+
     implementation 'com.google.firebase:firebase-appindexing:16.0.1'   //doesn't support 2.3.X and below.
+    implementation 'com.google.firebase:firebase-core:16.0.1'          //required for firebase to work correctly.
 }
 
 //apply plugin: 'com.google.gms.google-services'
