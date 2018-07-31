@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/VoiceActionsDemo.iml" filepath="$PROJECT_DIR$/VoiceActionsDemo.iml" />
-      <module fileurl="file://C:\Users\seker\git\speech\VoiceActionsDemo\VoiceActionsDemo.iml" filepath="C:\Users\seker\git\speech\VoiceActionsDemo\VoiceActionsDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\seker\git\speech\VoiceActionsDemo\app\app.iml" filepath="C:\Users\seker\git\speech\VoiceActionsDemo\app\app.iml" />
     </modules>
   </component>
 </project>
