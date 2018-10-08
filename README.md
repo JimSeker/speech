@@ -7,7 +7,7 @@ eclipse/ has the examples in eclipse project format, no longer updated.  Otherwi
 
 <b>speech2textdemo</b> use the recognizerIntent to get the speech2text engine and displays the top 5 results.
 
-<b>speech2Textdemo2</b> builds it's own interface, instead of using the recognizerIntent.  still displays the top 5 results.
+<b>speech2textdemo2</b> builds it's own interface, instead of using the recognizerIntent.  still displays the top 5 results.
 
 <b>text2speech</b> is a simple example to do text to speech.
 
