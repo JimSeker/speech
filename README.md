@@ -3,9 +3,13 @@ Android speech Examples
 
 eclipse/ has the examples in eclipse project format, no longer updated.  Otherwise the examples are for android studio.
 
-<b>Speak2Text</b>, <b>speach2Textdemo2</b>, and <b>speach2textDemo</b> show the varying ways to do speech to text
+<b>speec2text</b> use the button to have it recognize the speech.  It will list the top 5 results and speak the top result.  It also have multilingual abilities.
 
-<b>txt2spk</b> is a simple example to do text to speech.
+<b>speech2textdemo</b> use the recognizerIntent to get the speech2text engine and displays the top 5 results.
+
+<b>speech2Textdemo2</b> builds it's own interface, instead of using the recognizerIntent.  still displays the top 5 results.
+
+<b>text2speech</b> is a simple example to do text to speech.
 
 <b>VoiceActionsDemo</b>  Show how to add voice Actions to your app.  This example use the create_note intent.
 
