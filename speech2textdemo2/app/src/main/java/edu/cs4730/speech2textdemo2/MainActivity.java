@@ -1,8 +1,8 @@
 package edu.cs4730.speech2textdemo2;
 
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 /**
