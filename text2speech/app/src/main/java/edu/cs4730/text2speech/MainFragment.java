@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
+
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import android.widget.EditText;
  * A simple example of getting text input (via a EditText)
  * and using the text to speech engine to say the words.
  */
-public class MainFragment extends Fragment implements OnInitListener {
+public class MainFragment extends Fragment implements TextToSpeech.OnInitListener {
     private EditText words = null;
     private Button speakBtn = null;
     private static final int REQ_TTS_STATUS_CHECK = 0;
@@ -37,21 +38,26 @@ public class MainFragment extends Fragment implements OnInitListener {
         // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.main_fragment, container, false);
 
-        words = (EditText) myView.findViewById(R.id.wordsToSpeak);
-        speakBtn = (Button) myView.findViewById(R.id.speak);
+        words = myView.findViewById(R.id.wordsToSpeak);
+        speakBtn = myView.findViewById(R.id.speak);
+        speakBtn.setEnabled(false);
         speakBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Speech is simple.  send the words to speech aloud via the
                 //the text to speech end and add it to the end queue. (maybe others already in line.)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     //not sure what an utteranceId is supposed to be... we maybe able to setup a
                     //listener for "utterances" and check to see if they completed or something.
+                    Log.d(TAG, "Android 11 or higher");
+                    // mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
+                    mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_FLUSH, null, myUtteranceId);
+                } else {  //below 11/R use this.
+                    Log.d(TAG, "Android 10 or lower");
                     mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
-                } else {  //below lollipop and use this method instead.
-                    //noinspection deprecation
-                    mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_ADD, null);
+
                 }
+
 
             }
         });
@@ -87,7 +93,12 @@ public class MainFragment extends Fragment implements OnInitListener {
     public void onInit(int status) {
         // Now that the TTS engine is ready, we enable the button
         if (status == TextToSpeech.SUCCESS) {
+            Log.wtf(TAG, "TextToSpeech.SUCCESS");
             speakBtn.setEnabled(true);
+        } else if (status == TextToSpeech.ERROR) {
+            Log.wtf(TAG, "TextToSpeech.ERROR");
+        } else {
+            Log.wtf(TAG, "status is " + status);
         }
     }
 
