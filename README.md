@@ -9,7 +9,7 @@ eclipse/ has the examples in eclipse project format, no longer updated.  Otherwi
 
 <b>speech2textdemo2</b> builds it's own interface, instead of using the recognizerIntent.  still displays the top 5 results. broken in API 30, unknown reason.  Even on an android 11 device, it works if set to API 29, fails on API 30.  No documentation as to why.
 
-<b>text2speech</b> is a simple example to do text to speech. broken in API 30, unknown reason.  Even on an android 11 device, it works if set to API 29, fails on API 30.  No documentation as to why.  thanks google.
+<b>text2speech</b> is a simple example to do text to speech.   works in API 30 (with addtions).
 
 <b>VoiceActionsDemo</b>  Show how to add voice Actions to your app.  This example uses the create_note intent.
 
