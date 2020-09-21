@@ -74,19 +74,20 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
         PackageManager pm = getActivity().getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(
             new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
-/*
+
         if (activities.size() != 0) {
             speakButton.setOnClickListener(this);
+            // Most of the applications do not have to handle the voice settings. If the application
+            // does not require a recognition in a specific language (i.e., different from the system
+            // locale), the application does not need to read the voice settings.
+            refreshVoiceSettings();
+
         } else {
             speakButton.setEnabled(false);
             speakButton.setText("Recognizer not present");
         }
-*/
 
-        // Most of the applications do not have to handle the voice settings. If the application
-        // does not require a recognition in a specific language (i.e., different from the system
-        // locale), the application does not need to read the voice settings.
-      //  refreshVoiceSettings();
+
         return myView;
     }
 
