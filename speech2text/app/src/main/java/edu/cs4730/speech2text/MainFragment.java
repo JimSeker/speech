@@ -70,23 +70,24 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
 
         mSupportedLanguageView = myView.findViewById(R.id.supported_languages);
 
-        // Check to see if a recognition activity is present
+        // Check to see if a recognition activity is present, which is broken in API 30 by the package visiablity
+        // and I can't find the correct intent queury for it.
         PackageManager pm = getActivity().getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(
             new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
 
         if (activities.size() != 0) {
             speakButton.setOnClickListener(this);
-            // Most of the applications do not have to handle the voice settings. If the application
-            // does not require a recognition in a specific language (i.e., different from the system
-            // locale), the application does not need to read the voice settings.
-            refreshVoiceSettings();
+
 
         } else {
             speakButton.setEnabled(false);
             speakButton.setText("Recognizer not present");
         }
-
+        // Most of the applications do not have to handle the voice settings. If the application
+        // does not require a recognition in a specific language (i.e., different from the system
+        // locale), the application does not need to read the voice settings.
+        refreshVoiceSettings();
 
         return myView;
     }
@@ -158,8 +159,20 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
 
     private void refreshVoiceSettings() {
         Log.i(TAG, "Sending broadcast");
-        getActivity().sendOrderedBroadcast(RecognizerIntent.getVoiceDetailsIntent(getActivity()), null,
-            new SupportedLanguageBroadcastReceiver(), null, Activity.RESULT_OK, null, null);
+
+
+        if (RecognizerIntent.getVoiceDetailsIntent(getContext()) != null) {
+
+            getActivity().sendOrderedBroadcast(RecognizerIntent.getVoiceDetailsIntent(getContext()),
+                null,
+                new SupportedLanguageBroadcastReceiver(),
+                null,
+                Activity.RESULT_OK,
+                null,
+                null);
+        } else {
+            Log.wtf(TAG, "Google f**ing broke the intent visibly here and so this all fails.");
+        }
     }
 
     private void updateSupportedLanguages(List<String> languages) {
