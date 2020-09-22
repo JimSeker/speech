@@ -139,25 +139,14 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //not sure what an utteranceId is supposed to be... we maybe able to setup a
-                //listener for "utterences" and check to see if they completed or something.
-                mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null, myUtteranceId);
-            } else {  //below lollipop and use this method instead.
-                mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null);
-            }
+            mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null, myUtteranceId);
+
             // Fill the list view with the strings the recognizer thought it could have heard
             ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
             //Say it back, JW.
             if (!matches.isEmpty())
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    //not sure what an utteranceId is supposed to be... we maybe able to setup a
-                    //listener for "utterences" and check to see if they completed or something.
-                    mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
-                } else {  //below lollipop and use this method instead.
-                    mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null);
-                }
+                mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
 
 
             //list them to the screen.
