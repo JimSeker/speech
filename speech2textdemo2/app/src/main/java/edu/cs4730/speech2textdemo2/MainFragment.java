@@ -42,7 +42,7 @@ public class MainFragment extends Fragment implements OnClickListener {
         logger = myView.findViewById(R.id.log);
 
         //get the SpeechRecognizer and set a listener for it.
-        sr = SpeechRecognizer.createSpeechRecognizer(getActivity());
+        sr = SpeechRecognizer.createSpeechRecognizer(getContext());
         sr.setRecognitionListener(new listener());
 
         return myView;
@@ -131,6 +131,7 @@ public class MainFragment extends Fragment implements OnClickListener {
             //specify the max number of results
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
             //User of SpeechRecognizer to "send" the intent.
+            Log.i(TAG, "before start listening");
             sr.startListening(intent);
             Log.i(TAG, "Intent sent");
         }

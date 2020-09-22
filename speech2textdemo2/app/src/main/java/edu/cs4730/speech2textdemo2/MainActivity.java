@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    myMainFragment.logthis("Contact Read Access: Granted");
+                    myMainFragment.logthis("Audio record : Granted");
                     myMainFragment.RecordSpeak();
                 } else {
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    myMainFragment.logthis("Contact Read Access: Not Granted");
+                    myMainFragment.logthis("Audio Record : Not Granted");
                 }
             }
 

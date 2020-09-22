@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "edu.cs4730.speech2textdemo2"
         minSdkVersion 24
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
