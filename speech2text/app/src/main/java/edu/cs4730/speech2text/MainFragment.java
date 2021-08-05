@@ -186,7 +186,7 @@ public class MainFragment extends Fragment implements OnClickListener, OnInitLis
     }
 
     private void updateLanguagePreference(String language) {
-        TextView textView = (TextView) myView.findViewById(R.id.language_preference);
+        TextView textView = myView.findViewById(R.id.language_preference);
         textView.setText(language);
     }
 

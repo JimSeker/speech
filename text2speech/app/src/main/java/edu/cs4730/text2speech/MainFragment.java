@@ -5,6 +5,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -22,10 +26,9 @@ import android.widget.EditText;
 public class MainFragment extends Fragment implements TextToSpeech.OnInitListener {
     private EditText words = null;
     private Button speakBtn = null;
-    private static final int REQ_TTS_STATUS_CHECK = 0;
     private static final String TAG = "TTS Demo";
     private TextToSpeech mTts;
-    private String myUtteranceId = "txt2spk";
+    private final String myUtteranceId = "txt2spk";
 
 
     public MainFragment() {
@@ -55,38 +58,30 @@ public class MainFragment extends Fragment implements TextToSpeech.OnInitListene
                 } else {  //below 11/R use this.
                     Log.d(TAG, "Android 10 or lower");
                     mTts.speak(words.getText().toString(), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
-
                 }
-
-
             }
         });
 
+        //using the new startActivityForResult method.
+        ActivityResultLauncher<Intent> myActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    // if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                        // TTS is up and running
+                        mTts = new TextToSpeech(getActivity(), MainFragment.this);
+                        Log.v(TAG, "Pico is installed okay");
+                    } else
+                        Log.e(TAG, "Got a failure. TTS apparently not available");
+                }
+            });
         // Check to be sure that TTS exists and is okay to use
         Intent checkIntent = new Intent();
         checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        //The result will come back in onActivityResult with our REQ_TTS_STATUS_CHECK number
-        startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
-
+        myActivityResultLauncher.launch(checkIntent);
         return myView;
-    }
-
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_TTS_STATUS_CHECK) {
-            switch (resultCode) {
-                case TextToSpeech.Engine.CHECK_VOICE_DATA_PASS:
-                    // TTS is up and running
-                    mTts = new TextToSpeech(getActivity(), this);
-                    Log.v(TAG, "Pico is installed okay");
-                    break;
-                case TextToSpeech.Engine.CHECK_VOICE_DATA_FAIL:
-                default:
-                    Log.e(TAG, "Got a failure. TTS apparently not available");
-            }
-        } else {
-            // Got something else
-        }
     }
 
     @Override

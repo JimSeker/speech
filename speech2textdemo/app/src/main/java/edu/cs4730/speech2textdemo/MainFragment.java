@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -24,11 +28,9 @@ public class MainFragment extends Fragment {
 
     private static final String TAG = "VoiceRecognition";
 
-    private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-
     TextView log;
     Button spk;
-
+    ActivityResultLauncher<Intent> myActivityResultLauncher;
 
     public MainFragment() {
         // Required empty public constructor
@@ -47,6 +49,27 @@ public class MainFragment extends Fragment {
             }
         });
         log = myView.findViewById(R.id.log);
+
+        //using the new startActivityForResult method.
+        myActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        // Fill the list view with the strings the recognizer thought it could have heard, there should be 5, based on the call
+                        ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                        //display results.
+                        logthis("results: " + String.valueOf(matches.size()));
+                        for (int i = 0; i < matches.size(); i++) {
+                            logthis("result " + i + ":" + matches.get(i));
+                        }
+                    }
+                }
+            });
+
         return myView;
     }
 
@@ -71,25 +94,7 @@ public class MainFragment extends Fragment {
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
 
         Log.i(TAG, "Calling the Voice Intenet");
-        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
-    }
-
-    /**
-     * Handle the results from the recognition activity.
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // Fill the list view with the strings the recognizer thought it could have heard, there should be 5, based on the call
-            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-            //display results.
-            logthis("results: " + String.valueOf(matches.size()));
-            for (int i = 0; i < matches.size(); i++) {
-                logthis("result " + i + ":" + matches.get(i));
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+        myActivityResultLauncher.launch(intent);
     }
 
     /**

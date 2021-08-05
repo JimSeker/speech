@@ -1,13 +1,15 @@
 package edu.cs4730.speech2textdemo2;
 
 import android.content.pm.PackageManager;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 
 /**
- *  Nothing to see here, look at MainFragment.
- *  The request premissions is handled here and then calls back to the fragment.
+ * Nothing to see here, look at MainFragment.
+ * The request permissions is handled here and then calls back to the fragment.
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
+
         switch (requestCode) {
             case REQUEST_PERM_ACCESS: {
                 // If request is cancelled, the result arrays are empty.
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

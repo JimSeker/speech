@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +57,7 @@ public class MainFragment extends Fragment implements OnClickListener {
         super.onDestroy();
     }
 
-    /*
+    /**
      * The Recognitionlistener for the SpeechRecognizer.
      */
     class listener implements RecognitionListener {
