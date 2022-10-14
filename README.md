@@ -5,7 +5,7 @@ Android speech Examples
 
 `legacy/` is older examples that are either depreciated or have been replaced by newer ones.
 
-`speech2text` use the button to have it recognize the speech.  It will list the top 5 results and speak the top result.  It also has multilingual abilities.  
+`speech2text` use the button to have it recognize the speech.  It will list the top 5 results and speak the top result.  It also has multilingual abilities (broken currently).  
 
 `speech2textdemo` use the recognizerIntent to get the speech2text engine and displays the top 5 results.  
 

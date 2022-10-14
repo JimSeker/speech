@@ -1,15 +1,13 @@
 package edu.cs4730.speech2textdemo2;
 
-import android.Manifest;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
@@ -30,7 +28,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int REQUEST_PERM_ACCESS = 1;
     private TextView logger;
     private SpeechRecognizer sr;
     private static final String TAG = "MainActivity";

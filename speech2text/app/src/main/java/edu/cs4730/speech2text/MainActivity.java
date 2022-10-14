@@ -1,5 +1,9 @@
 package edu.cs4730.speech2text;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -27,11 +31,17 @@ import java.util.List;
 
 /**
  * One of google's older examples of speech recognition.  with some fixes here and there it
- * still works pretty well.  It will do multilingual recognition as well.  It will also speak back to
+ * still works pretty well.
+ *
+ * 10/14/22 The multilingual part is now broken.  at at android 11, it stop being able to get the supported languages
+ * and I don't know why.  I've made multiple searchs to see if a thing I can fix, but so far I can't
+ * find any help or documentation.  the refreshlanguages method fails, so not sure what to do.
+ *
+ * It will do multilingual recognition as well.  It will also speak back to
  * you the top result.
  */
 
-public class MainActivity extends AppCompatActivity implements  TextToSpeech.OnInitListener {
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private static final String TAG = "VoiceRecognition";
     private static final String myUtteranceId = "spk2txt";
@@ -43,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements  TextToSpeech.OnI
 
     private Spinner mSupportedLanguageView;
     private TextToSpeech mTts;
+
+    ActivityResultLauncher<Intent> voiceActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +85,38 @@ public class MainActivity extends AppCompatActivity implements  TextToSpeech.OnI
             speakButton.setEnabled(false);
             speakButton.setText("Recognizer not present");
         }
+        Context context = this;  //for the launcher, so the adapter will show the theme correctly.  get base or get context don't return the right one.
+        voiceActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        //Bundle extras = data.getExtras();  //dont' need this one here.
+
+                        mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null, myUtteranceId);
+
+                        // Fill the list view with the strings the recognizer thought it could have heard
+                        ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                        //Say it back, JW.
+                        if (!matches.isEmpty())
+                            mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
+
+
+                        //list them to the screen.
+                        mList.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, matches));
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Recognation failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+
+
         // Most of the applications do not have to handle the voice settings. If the application
         // does not require a recognition in a specific language (i.e., different from the system
         // locale), the application does not need to read the voice settings.
@@ -103,12 +147,19 @@ public class MainActivity extends AppCompatActivity implements  TextToSpeech.OnI
         // Specify the recognition language. This parameter has to be specified only if the
         // recognition has to be done in a specific language and not the default one (i.e., the
         // system locale). Most of the applications do not have to set this parameter.
-        if (!mSupportedLanguageView.getSelectedItem().toString().equals("Default")) {
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
-                mSupportedLanguageView.getSelectedItem().toString());
-        }
+        if (mSupportedLanguageView.getSelectedItem() != null) {
+            Log.d(TAG, mSupportedLanguageView.getSelectedItem().toString());
 
-        startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+            if (!mSupportedLanguageView.getSelectedItem().toString().equals("Default")) {
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                    mSupportedLanguageView.getSelectedItem().toString());
+            }
+        }
+        //startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+        //These the launchers for results.
+
+        voiceActivityResultLauncher.launch(intent);
+
     }
 
     /**
@@ -138,6 +189,16 @@ public class MainActivity extends AppCompatActivity implements  TextToSpeech.OnI
     private void refreshVoiceSettings() {
         Log.i(TAG, "Sending broadcast");
 
+        //Intent i = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+        Intent i = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+        //intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+        sendOrderedBroadcast(i,
+            null,
+            new SupportedLanguageBroadcastReceiver(),
+            null,
+            Activity.RESULT_OK,
+            null,
+            null);
 
         if (RecognizerIntent.getVoiceDetailsIntent(getApplicationContext()) != null) {
 
@@ -195,9 +256,10 @@ public class MainActivity extends AppCompatActivity implements  TextToSpeech.OnI
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("No extra");
+                        showToast("No extra, so no supported languages included.");
                     }
                 });
+                return;
             }
 
             if (extra.containsKey(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)) {
