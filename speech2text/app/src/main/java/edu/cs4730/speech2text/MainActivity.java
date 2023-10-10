@@ -19,15 +19,14 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.cs4730.speech2text.databinding.ActivityMainBinding;
 
 /**
  * One of google's older examples of speech recognition.  with some fixes here and there it
@@ -45,45 +44,35 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private static final String TAG = "VoiceRecognition";
     private static final String myUtteranceId = "spk2txt";
-    private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-
-    private ListView mList;
-
+    ActivityMainBinding binding;
     private Handler mHandler;
-
-    private Spinner mSupportedLanguageView;
     private TextToSpeech mTts;
-
     ActivityResultLauncher<Intent> voiceActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         mHandler = new Handler();
         mTts = new TextToSpeech(this, this);
-
-        // Get display items for later interaction
-        Button speakButton = findViewById(R.id.btn_speak);
-
-        mList = findViewById(R.id.list);
-
-        mSupportedLanguageView = findViewById(R.id.supported_languages);
 
         // Check to see if a recognition activity is present, which needs the query in the manifest file in order to work.
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
 
         if (activities.size() != 0) {
-            speakButton.setOnClickListener(new View.OnClickListener() {
+            binding.btnSpeak.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startVoiceRecognitionActivity();
                 }
             });
         } else {
-            speakButton.setEnabled(false);
-            speakButton.setText("Recognizer not present");
+            binding.btnSpeak.setEnabled(false);
+            binding.btnSpeak.setText("Recognizer not present");
         }
         Context context = this;  //for the launcher, so the adapter will show the theme correctly.  get base or get context don't return the right one.
         voiceActivityResultLauncher = registerForActivityResult(
@@ -107,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
 
                         //list them to the screen.
-                        mList.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, matches));
+                        binding.list.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, matches));
 
                     } else {
                         Toast.makeText(getApplicationContext(), "Recognation failed", Toast.LENGTH_SHORT).show();
@@ -147,12 +136,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         // Specify the recognition language. This parameter has to be specified only if the
         // recognition has to be done in a specific language and not the default one (i.e., the
         // system locale). Most of the applications do not have to set this parameter.
-        if (mSupportedLanguageView.getSelectedItem() != null) {
-            Log.d(TAG, mSupportedLanguageView.getSelectedItem().toString());
+        if (binding.supportedLanguages.getSelectedItem() != null) {
+            Log.d(TAG, binding.supportedLanguages.getSelectedItem().toString());
 
-            if (!mSupportedLanguageView.getSelectedItem().toString().equals("Default")) {
+            if (!binding.supportedLanguages.getSelectedItem().toString().equals("Default")) {
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
-                    mSupportedLanguageView.getSelectedItem().toString());
+                        binding.supportedLanguages.getSelectedItem().toString());
             }
         }
         //startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
@@ -160,30 +149,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         voiceActivityResultLauncher.launch(intent);
 
-    }
-
-    /**
-     * Handle the results from the recognition activity.
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-
-            mTts.speak("Did you say?", TextToSpeech.QUEUE_ADD, null, myUtteranceId);
-
-            // Fill the list view with the strings the recognizer thought it could have heard
-            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-            //Say it back, JW.
-            if (!matches.isEmpty())
-                mTts.speak(matches.get(0), TextToSpeech.QUEUE_ADD, null, myUtteranceId);
-
-
-            //list them to the screen.
-            mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void refreshVoiceSettings() {
@@ -221,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         SpinnerAdapter adapter = new ArrayAdapter<CharSequence>(this,
             android.R.layout.simple_spinner_item, languages.toArray(
             new String[languages.size()]));
-        mSupportedLanguageView.setAdapter(adapter);
+        binding.supportedLanguages.setAdapter(adapter);
     }
 
     private void updateLanguagePreference(String language) {

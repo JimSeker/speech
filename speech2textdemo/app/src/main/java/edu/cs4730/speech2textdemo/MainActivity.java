@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import edu.cs4730.speech2textdemo.databinding.ActivityMainBinding;
+
 /**
  * This is a simplified version of Google's voice recognition code.
  * It skips all the languages and just uses the default language.
@@ -25,20 +27,20 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "VoiceRecognition";
-    TextView logger;
+    ActivityMainBinding binding;
     ActivityResultLauncher<Intent> myActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startVoiceRecognitionActivity();
             }
         });
-        logger = findViewById(R.id.logger);
 
         //using the new startActivityForResult method.
         myActivityResultLauncher = registerForActivityResult(
@@ -91,6 +93,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void logthis(String newinfo) {
         Log.d(TAG, newinfo);
-        logger.append(newinfo + "\n");
+        binding.logger.append(newinfo + "\n");
     }
 }

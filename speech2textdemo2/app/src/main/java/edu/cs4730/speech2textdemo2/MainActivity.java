@@ -21,6 +21,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Map;
 
+import edu.cs4730.speech2textdemo2.databinding.ActivityMainBinding;
+
 /**
  * This example shows the speech recognition without a dialog box.
  * You should likely create your own, so people know when to speak and when it stops.
@@ -28,7 +30,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView logger;
+    ActivityMainBinding binding;
     private SpeechRecognizer sr;
     private static final String TAG = "MainActivity";
     ActivityResultLauncher<String[]> rpl;
@@ -37,34 +39,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         //set the listener for the button.
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!allPermissionsGranted())
-                    rpl.launch(REQUIRED_PERMISSIONS);
-                else
-                    RecordSpeak();
+                if (!allPermissionsGranted()) rpl.launch(REQUIRED_PERMISSIONS);
+                else RecordSpeak();
             }
         });
-        //get the logger textview.
-        logger = findViewById(R.id.log);
 
         //this allows us to check with multiple permissions, but in this case (currently) only need 1.
-        rpl = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
-            new ActivityResultCallback<Map<String, Boolean>>() {
-                @Override
-                public void onActivityResult(Map<String, Boolean> isGranted) {
-                    boolean granted = true;
-                    for (Map.Entry<String, Boolean> x : isGranted.entrySet()) {
-                        logthis(x.getKey() + " is " + x.getValue());
-                        if (!x.getValue()) granted = false;
-                    }
-                    if (granted) RecordSpeak();
+        rpl = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+            @Override
+            public void onActivityResult(Map<String, Boolean> isGranted) {
+                boolean granted = true;
+                for (Map.Entry<String, Boolean> x : isGranted.entrySet()) {
+                    logthis(x.getKey() + " is " + x.getValue());
+                    if (!x.getValue()) granted = false;
                 }
+                if (granted) RecordSpeak();
             }
-        );
+        });
 
         //get the SpeechRecognizer and set a listener for it.
         sr = SpeechRecognizer.createSpeechRecognizer(this);
@@ -152,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void logthis(String newinfo) {
         Log.d(TAG, newinfo);
-        logger.append(newinfo + "\n");
+        binding.log.append(newinfo + "\n");
     }
 
     //ask for permissions when we start.
