@@ -18,6 +18,7 @@ Android speech Examples
 `text2speech` (java) is a simple example to do text to speech.   works in API 30 with queries additions. 
 
 `text2speech_kt` (kotlin) is a simple example to do text to speech.   works in API 30 with queries additions. 
+
 ---
 
 These are example code for University of Wyoming, Cosc 4730 Mobile Programming course and cosc 4735 Advance Mobile Programing course. 
