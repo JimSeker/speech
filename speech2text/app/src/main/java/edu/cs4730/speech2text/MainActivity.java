@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -12,9 +13,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognitionSupport;
+import android.speech.RecognitionSupportCallback;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +30,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.Executors;
 
 import edu.cs4730.speech2text.databinding.ActivityMainBinding;
 
@@ -63,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
 
-        if (activities.size() != 0) {
+        if (!activities.isEmpty()) {
             binding.btnSpeak.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -104,12 +112,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 }
             });
 
-
-
         // Most of the applications do not have to handle the voice settings. If the application
         // does not require a recognition in a specific language (i.e., different from the system
         // locale), the application does not need to read the voice settings.
-        refreshVoiceSettings();
+        refreshVoiceSettings2();
     }
 
 
@@ -146,13 +152,63 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         }
         //startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
         //These the launchers for results.
-
         voiceActivityResultLauncher.launch(intent);
 
     }
 
+    /**
+     * uses newer API to find the extra languages, but only works in api 33+
+     */
+
+    private void refreshVoiceSettings2() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (SpeechRecognizer.isOnDeviceRecognitionAvailable(this) ) {
+                SpeechRecognizer recognizer  = SpeechRecognizer.createOnDeviceSpeechRecognizer(this);
+                Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                recognizer.checkRecognitionSupport(recognizerIntent, Executors.newSingleThreadExecutor(),
+                    new RecognitionSupportCallback() {
+                        @Override
+                        public void onSupportResult(@NonNull RecognitionSupport recognitionSupport) {
+                            mHandler.post(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    updateSupportedLanguages(recognitionSupport.getSupportedOnDeviceLanguages());
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onError(int error) {
+
+                        }
+                    }
+                );
+            }
+        } else {
+            refreshVoiceSettings(); //default to likely the broken one.
+
+        }
+    }
+
+    /**
+     * Should find the extra languages and pieces that can be recognized
+     * but has been broken in Oreo, when the intent queries were required.
+     *
+     * likely will always return null.
+     */
+
     private void refreshVoiceSettings() {
         Log.i(TAG, "Sending broadcast");
+
+        /*
+        Set<Locale> lang = mTts.getAvailableLanguages();  //this is always null
+        for (Locale t: lang) {
+            Log.d(TAG, t.toString()
+            );
+        }
+        */
 
         //Intent i = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
         Intent i = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
@@ -165,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             null,
             null);
 
-        if (RecognizerIntent.getVoiceDetailsIntent(getApplicationContext()) != null) {
+        if (RecognizerIntent.getVoiceDetailsIntent(this) != null) {
 
             sendOrderedBroadcast(RecognizerIntent.getVoiceDetailsIntent(getApplicationContext()),
                 null,
@@ -204,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         @Override
         public void onReceive(Context context, final Intent intent) {
-            Log.i(TAG, "Receiving broadcast " + intent);
+            Log.wtf(TAG, "Receiving broadcast " + intent);
 
             final Bundle extra = getResultExtras(false);
 
@@ -212,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("Error code:" + getResultCode());
+                        Log.e(TAG, "Error code:" + getResultCode());
                     }
                 });
             }
@@ -221,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("No extra, so no supported languages included.");
+                        Log.e(TAG, "No extra, so no supported languages included.");
                     }
                 });
                 return;
