@@ -16,6 +16,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognitionSupport;
 import android.speech.RecognitionSupportCallback;
 import android.speech.RecognizerIntent;
@@ -38,11 +39,13 @@ import edu.cs4730.speech2text.databinding.ActivityMainBinding;
 
 /**
  * One of google's older examples of speech recognition.  with some fixes here and there it
- * still works pretty well.
+ * still works mostly.
  *
  * 10/14/22 The multilingual part is now broken.  at at android 11, it stop being able to get the supported languages
- * and I don't know why.  I've made multiple searchs to see if a thing I can fix, but so far I can't
- * find any help or documentation.  the refreshlanguages method fails, so not sure what to do.
+ * and  the intent queries is pretty much broken this app for the addition languages.  mulit searches over 2 years
+ * have turned up no good fix.
+ * 9/24/24 but api 33 does have a fix in it, so refreshVoiceSettings2 uses those and fails back to the broken
+ * ones for below 33.
  *
  * It will do multilingual recognition as well.  It will also speak back to
  * you the top result.
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
         mTts = new TextToSpeech(this, this);
 
         // Check to see if a recognition activity is present, which needs the query in the manifest file in order to work.

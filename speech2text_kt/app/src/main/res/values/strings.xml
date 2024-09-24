@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">speech2text</string>
-
+    <string name="app_name">speech2text_kt</string>
     <string name="voice_recognition_prompt">This activity demonstrates the voice recognition APIs.</string>
     <string name="speak_button">Speak!</string>
     <string name="voice_recognition_results">Results:</string>
