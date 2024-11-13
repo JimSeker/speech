@@ -8,9 +8,10 @@ import android.speech.tts.TextToSpeech.OnInitListener
 import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import edu.cs4730.text2speech_kt.databinding.ActivityMainBinding
 
 
@@ -28,9 +29,13 @@ class MainActivity : AppCompatActivity(), OnInitListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.getRoot())
-
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
         binding.speak.setEnabled(false)
-        binding.speak.setOnClickListener(View.OnClickListener {
+        binding.speak.setOnClickListener {
             //Speech is simple.  send the words to speech aloud via the
             //the text to speech end and add it to the end queue. (maybe others already in line.)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -53,7 +58,7 @@ class MainActivity : AppCompatActivity(), OnInitListener {
                     myUtteranceId
                 )
             }
-        })
+        }
 
         //using the new startActivityForResult method.
         val myActivityResultLauncher = registerForActivityResult<Intent, ActivityResult>(

@@ -20,10 +20,11 @@ import android.widget.SpinnerAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import edu.cs4730.speech2text_kt.databinding.ActivityMainBinding
 import java.util.concurrent.Executors
 
@@ -55,7 +56,11 @@ class MainActivity : AppCompatActivity(), OnInitListener {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.getRoot())
-
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
         mHandler = Handler(Looper.getMainLooper())
         mTts = TextToSpeech(this, this)
 
