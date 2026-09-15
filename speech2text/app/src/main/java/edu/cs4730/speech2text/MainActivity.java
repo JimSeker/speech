@@ -44,7 +44,7 @@ import edu.cs4730.speech2text.databinding.ActivityMainBinding;
  * One of google's older examples of speech recognition.  with some fixes here and there it
  * still works mostly.
  *
- * 10/14/22 The multilingual part is now broken.  at at android 11, it stop being able to get the supported languages
+ * 10/14/22 The multilingual part is now broken.  at android 11, it stop being able to get the supported languages
  * and  the intent queries is pretty much broken this app for the addition languages.  mulit searches over 2 years
  * have turned up no good fix.
  * 9/24/24 but api 33 does have a fix in it, so refreshVoiceSettings2 uses those and fails back to the broken
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         binding.list.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, matches));
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Recognation failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Recognition failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

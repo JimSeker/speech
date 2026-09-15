@@ -1,5 +1,6 @@
 package edu.cs4730.speech2text_kt
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity(), OnInitListener {
     private lateinit var mTts: TextToSpeech
     private lateinit var voiceActivityResultLauncher: ActivityResultLauncher<Intent>
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity(), OnInitListener {
             pm.queryIntentActivities(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0)
 
         if (activities.isNotEmpty()) {
-            binding.btnSpeak.setOnClickListener(View.OnClickListener { startVoiceRecognitionActivity() })
+            binding.btnSpeak.setOnClickListener { startVoiceRecognitionActivity() }
         } else {
             binding.btnSpeak.setEnabled(false)
             binding.btnSpeak.text = "Recognizer not present"
@@ -103,7 +105,7 @@ class MainActivity : AppCompatActivity(), OnInitListener {
                     )
                 )
             } else {
-                Toast.makeText(applicationContext, "Recognation failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Recognition failed", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -121,7 +123,7 @@ class MainActivity : AppCompatActivity(), OnInitListener {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 
         // Specify the calling package to identify your application
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, javaClass.getPackage().name)
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, javaClass.getPackage()?.name)
 
         // Display an hint to the user about what he should say.
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech recognition demo")
